@@ -23,8 +23,9 @@ async def add_cogs():
 
 asyncio.run(add_cogs())
 
+
+@bot.event
+async def on_ready():
+    print('Bot is ready.')
+
 bot.run(TOKEN)
-
-
-
-
