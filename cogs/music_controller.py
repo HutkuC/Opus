@@ -57,11 +57,10 @@ class Music_controller(commands.Cog):
 
         if ctx.voice_client.is_playing():
             ctx.voice_client.stop()
-        if len(queue.queue[ctx.guild.id]) > 0:
-            queue.queue[ctx.guild.id].pop(0)
         if len(args) == 0:
             await ctx.send('```Skipped.```')
-
+        if len(queue.queue[ctx.guild.id]) > 0:
+            queue.queue[ctx.guild.id].pop(0)
         if len(queue.queue[ctx.guild.id]) > 0:
             play = self.bot.get_cog('Play')
             await play.start(self, ctx)
