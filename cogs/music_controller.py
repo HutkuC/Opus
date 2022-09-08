@@ -1,6 +1,6 @@
 from discord.ext import commands
 from queue import Queue
-from play import Play
+#from play import Play
 
 class Music_controller(commands.Cog):
 
@@ -58,4 +58,4 @@ class Music_controller(commands.Cog):
             Queue.queue[ctx.guild.id].pop(0)
         if len(args) > 0:
             await ctx.send('```Skipped.```')
-        await Play.start(self, ctx)
+        #await Play.start(self, ctx)
