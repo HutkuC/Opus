@@ -73,3 +73,20 @@ class Queue(commands.Cog):
             return
         await ctx.send('```Removed the song ' + self.queue[ctx.guild.id][int(index)]['title'] + ' from the queue.```')
         self.queue[ctx.guild.id].pop(int(index))
+
+    @commands.command(name='clear', help='Clears the queue')
+    async def clear(self, ctx):
+        if ctx.author.voice is None:
+            await ctx.send("```You are not in a voice channel.```")
+            return
+        if ctx.voice_client is None:
+            await ctx.send('```Not playing anything.```')
+            return
+        if ctx.voice_client.channel != ctx.message.author.voice.channel:
+            await ctx.send('```You must be in the same voice channel as the bot.```')
+            return
+        if len(self.queue[ctx.guild.id]) <= 1:
+            await ctx.send('```The queue is empty.```')
+            return
+        self.queue[ctx.guild.id] = self.queue[ctx.guild.id][:1]
+        await ctx.send('```Cleared the queue.```')
