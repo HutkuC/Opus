@@ -1,5 +1,5 @@
 from discord.ext import commands
-from queue import Queue
+
 
 class Channel_controller(commands.Cog):
 
@@ -29,7 +29,9 @@ class Channel_controller(commands.Cog):
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
             await ctx.send('```You must be in the same voice channel as the bot.```')
             return
+
         if ctx.voice_client.is_playing():
             ctx.voice_client.stop()
-        Queue.queue[ctx.guild.id] = []
+        queue = self.bot.get_cog('Queue')
+        queue.queue[ctx.guild.id] = []
         await ctx.voice_client.disconnect()
