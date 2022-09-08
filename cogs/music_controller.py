@@ -1,6 +1,4 @@
 from discord.ext import commands
-from queue import Queue
-#from play import Play
 
 class Music_controller(commands.Cog):
 
