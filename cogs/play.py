@@ -20,28 +20,26 @@ class Play(commands.Cog):
         if len(self.skip_set) > 0:
             music_controller = self.bot.get_cog('Music_controller')
             for ctx in self.skip_set:
-                music_controller.skip(ctx, 'auto_skip')
+                await music_controller.skip(ctx, 'auto_skip')
             self.skip_set.clear()
 
     async def start(self, ctx):
         queue = self.bot.get_cog('Queue')
-        if os.path.exists(".sound_files/" + str(ctx.guild.id) + ".mp3"):
-            os.remove(".sound_files/" + str(ctx.guild.id) + ".mp3")
+        if os.path.exists("./sound_files/" + str(ctx.guild.id) + ".mp3"):
+            os.remove("./sound_files/" + str(ctx.guild.id) + ".mp3")
 
         if len(queue.queue[ctx.guild.id]) == 0:
             return
 
-        yt = YouTube(queue[0][2])
+        yt = YouTube(queue.get_url(ctx, 0))
         video = yt.streams.filter(only_audio=True).first()
-        destination = '.sound_files/'
-        out_file = video.download(output_path=destination)
-        new_file = str(ctx.guild.id) + ".mp3"
-        os.rename(out_file, new_file)
+        destination = '/Users/utku/Desktop/Opus/sound_files'
+        video.download(output_path=destination, filename=str(ctx.guild.id)+'.mp3')
 
         print(yt.title + " has been successfully downloaded.")
-        ctx.voice_client.play(discord.FFmpegPCMAudio(".sound_files/" + str(ctx.guild.id) + ".mp3"),
+        ctx.voice_client.play(discord.FFmpegPCMAudio("sound_files/" + str(ctx.guild.id) + ".mp3"),
                               after=lambda e: self.auto_skip(ctx))
-        await ctx.send(f'```Current song: {queue[0][0]} - {queue[0][1]}```')
+        await ctx.send(f'```Current song: {queue.get_duration(ctx, 0)} - {queue.get_title(ctx, 0)}```')
 
     @commands.command(name='play', help='Plays a song')
     async def play(self, ctx, *args):
@@ -67,7 +65,7 @@ class Play(commands.Cog):
         video_title = video_title.replace(' - Topic', '')
 
         queue = self.bot.get_cog('Queue')
-        queue.add_queue(ctx.guild.id, duration, video_title, url, search_text)
+        queue.add_to_queue(ctx.guild.id, duration, video_title, url, search_text)
 
         await ctx.send(f'```Added to queue:\n{video_title}```')
         if ctx.voice_client.is_playing() is False and \

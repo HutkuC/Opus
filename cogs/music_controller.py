@@ -2,7 +2,7 @@ from discord.ext import commands
 
 class Music_controller(commands.Cog):
 
-    def _init_(self, bot):
+    def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='pause', help='Pauses the current song')
@@ -61,4 +61,4 @@ class Music_controller(commands.Cog):
             queue.queue[ctx.guild.id].pop(0)
         if len(queue.queue[ctx.guild.id]) > 0:
             play = self.bot.get_cog('Play')
-            await play.start(self, ctx)
+            await play.start(ctx)

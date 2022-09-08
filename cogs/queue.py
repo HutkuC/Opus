@@ -12,9 +12,24 @@ class Queue(commands.Cog):
             return
         self.queue[guild_id] = []
 
-    def get_from_queue(self, guild_id, index):
-        if guild_id in self.queue and len(self.queue[guild_id]) > index:
-            return self.queue[guild_id][index]
+    def get_url(self, ctx, index):
+        if ctx.guild.id in self.queue and len(self.queue[ctx.guild.id]) > index:
+            return self.queue[ctx.guild.id][index]['url']
+        return None
+
+    def get_title(self, ctx, index):
+        if ctx.guild.id in self.queue and len(self.queue[ctx.guild.id]) > index:
+            return self.queue[ctx.guild.id][index]['title']
+        return None
+
+    def get_search_term(self, ctx, index):
+        if ctx.guild.id in self.queue and len(self.queue[ctx.guild.id]) > index:
+            return self.queue[ctx.guild.id][index]['search_term']
+        return None
+
+    def get_duration(self, ctx, index):
+        if ctx.guild.id in self.queue and len(self.queue[ctx.guild.id]) > index:
+            return self.queue[ctx.guild.id][index]['duration']
         return None
 
     def add_to_queue(self, guild_id, duration, title, url, search_term):
@@ -37,9 +52,9 @@ class Queue(commands.Cog):
             await ctx.send('```The queue is empty.```')
             return
         msg = '```\n'
-        msg += 'Current song: ' + self.queue[ctx.guild.id][0][0] + ' - ' + self.queue[ctx.guild.id][0][1] + '\n'
+        msg += 'Current song: ' + self.get_duration(ctx, 0) + ' - ' + self.get_title(ctx, 0) + '\n'
         for i in range(1, len(self.queue[ctx.guild.id])):
-            msg += str(i) + ' - ' + self.queue[ctx.guild.id][i][0] + ' - ' + self.queue[ctx.guild.id][i][1] + '\n'
+            msg += str(i) + ' - ' + self.get_duration(ctx, i) + ' - ' + self.get_title(ctx, i) + '\n'
         msg += '```'
         await ctx.send(msg)
 
@@ -58,7 +73,7 @@ class Queue(commands.Cog):
             await ctx.send('```Not playing anything.```')
             return
         msg = '```\n'
-        msg += 'Current song: ' + self.queue[ctx.guild.id][0]['duration'] + ' - ' + self.queue[ctx.guild.id][0]['title'] + '\n'
+        msg += 'Current song: ' + self.get_duration(ctx, 0) + ' - ' + self.get_title(ctx, 0) + '\n'
         msg += '```'
         await ctx.send(msg)
 
