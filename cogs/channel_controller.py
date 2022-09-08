@@ -3,7 +3,7 @@ from queue import Queue
 
 class Channel_controller(commands.Cog):
 
-    def _init_(self, bot):
+    def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='join', help='Joins the voice channel')
@@ -14,6 +14,8 @@ class Channel_controller(commands.Cog):
         if ctx.voice_client is not None:
             await ctx.send('```Already in a voice channel.```')
             return
+        Q = self.bot.get_cog('Queue')
+        Q.construct_queue(ctx.guild.id)
         channel = ctx.message.author.voice.channel
         await channel.connect()
 
