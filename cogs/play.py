@@ -1,6 +1,7 @@
 from discord.ext import commands
 from youtubesearchpython import VideosSearch
 from pytube import YouTube
+from discord.ext import tasks
 import discord
 import os
 
@@ -9,10 +10,19 @@ class Play(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.is_skip = set()
+        self.skip_set = set()
+        await self.check_skip.start()
 
     def auto_skip(self, ctx):
-        self.is_skip.add(ctx)
+        self.skip_set.add(ctx)
+
+    @tasks.loop(seconds=1)
+    async def check_skip(self):
+        if len(self.skip_set) > 0:
+            music_controller = self.bot.get_cog('Music_controller')
+            for ctx in self.skip_set:
+                music_controller.skip(ctx, 'auto_skip')
+            self.skip_set.clear()
 
     async def start(self, ctx):
         queue = self.bot.get_cog('Queue')
