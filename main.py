@@ -18,22 +18,26 @@ from pytube import YouTube
 from discord.ext import tasks
 import requests as req
 from bs4 import BeautifulSoup
-from .cogs import channel_controller, music_controller, play, queue
+from cogs import channel_controller, music_controller, play, queue
 
-TOKEN = '[YOUR TOKEN]'
+TOKEN = 'MTAxNzE1NzExMzgwNzY0Njc3Mg.Gu75Eu.g-BVDnMnCGxA2TfYNzQoKQ_olqQiPBcPQX2vTE'
 
 intents = discord.Intents.all()
 
 client = discord.Client(intents=intents)
 
-bot = commands.Bot(command_prefix='h!', intents=intents)
+bot = commands.Bot(command_prefix='o!', intents=intents)
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 COGS = [channel_controller.Channel_controller, music_controller.Music_controller, play.Play, queue.Queue]
 
-for cog in COGS:
-    bot.add_cog(cog(bot))
+
+async def add_cogs():
+    for cog in COGS:
+        await bot.add_cog(cog(bot))
+
+asyncio.run(add_cogs())
 
 bot.run(TOKEN)
 
