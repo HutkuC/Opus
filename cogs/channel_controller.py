@@ -14,8 +14,8 @@ class Channel_controller(commands.Cog):
         if ctx.voice_client is not None:
             await ctx.send('```Already in a voice channel.```')
             return
-        Q = self.bot.get_cog('Queue')
-        Q.construct_queue(ctx.guild.id)
+        queue = self.bot.get_cog('Queue')
+        queue.construct_queue(ctx.guild.id)
         channel = ctx.message.author.voice.channel
         await channel.connect()
 
