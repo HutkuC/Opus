@@ -10,9 +10,7 @@ intents = discord.Intents.all()
 
 client = discord.Client(intents=intents)
 
-bot = commands.Bot(command_prefix='o!', intents=intents)
-
-#os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 COGS = [channel_controller.Channel_controller, music_controller.Music_controller, play.Play, queue.Queue]
 
