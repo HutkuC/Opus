@@ -2,9 +2,15 @@ from discord.ext import commands
 
 
 class Queue(commands.Cog):
-    def _init_(self, bot):
+
+    def __init__(self, bot):
         self.bot = bot
         self.queue = {}
+
+    def construct_queue(self, guild_id):
+        if guild_id in self.queue:
+            return
+        self.queue[guild_id] = []
 
     def get_from_queue(self, guild_id, index):
         if guild_id in self.queue and len(self.queue[guild_id]) > index:
