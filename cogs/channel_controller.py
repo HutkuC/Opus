@@ -25,7 +25,6 @@ class Channel_controller(commands.Cog):
             await ctx.send("```You are not in a voice channel.```")
             return
         if ctx.voice_client is None:
-            await ctx.send('```Not in a voice channel.```')
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
             await ctx.send('```You must be in the same voice channel as the bot.```')
