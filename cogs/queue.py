@@ -6,9 +6,9 @@ class Queue(commands.Cog):
         self.bot = bot
         self.queue = {}
 
-    @commands.command()
+    @commands.command(name='queue', help='Shows the queue')
     async def queue(self, ctx):
-        if ctx.author.voise is None:
+        if ctx.author.voice is None:
             await ctx.send("```You are not in a voice channel.```")
             return
         if ctx.voice_client is None:
