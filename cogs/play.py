@@ -11,7 +11,6 @@ class Play(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.skip_set = set()
-        await self.check_skip.start()
 
     def auto_skip(self, ctx):
         self.skip_set.add(ctx)

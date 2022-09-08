@@ -12,7 +12,7 @@ client = discord.Client(intents=intents)
 
 bot = commands.Bot(command_prefix='o!', intents=intents)
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+#os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 COGS = [channel_controller.Channel_controller, music_controller.Music_controller, play.Play, queue.Queue]
 
@@ -27,5 +27,7 @@ asyncio.run(add_cogs())
 @bot.event
 async def on_ready():
     print('Bot is ready.')
+    play = bot.get_cog('Play')
+    await play.check_skip.start()
 
 bot.run(TOKEN)
