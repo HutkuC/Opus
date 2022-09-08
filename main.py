@@ -4,7 +4,7 @@ import asyncio
 from discord.ext import commands
 from cogs import channel_controller, music_controller, play, queue
 
-TOKEN = 'MTAxNzE1NzExMzgwNzY0Njc3Mg.Gu75Eu.g-BVDnMnCGxA2TfYNzQoKQ_olqQiPBcPQX2vTE'
+TOKEN = '[Discord Bot Token]'
 
 intents = discord.Intents.all()
 
