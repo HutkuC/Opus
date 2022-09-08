@@ -52,10 +52,16 @@ class Music_controller(commands.Cog):
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
             await ctx.send('```You must be in the same voice channel as the bot.```')
             return
+
+        queue = self.bot.get_cog('Queue')
+
         if ctx.voice_client.is_playing():
             ctx.voice_client.stop()
-        if len(Queue.queue[ctx.guild.id]) > 0:
-            Queue.queue[ctx.guild.id].pop(0)
-        if len(args) > 0:
+        if len(queue.queue[ctx.guild.id]) > 0:
+            queue.queue[ctx.guild.id].pop(0)
+        if len(args) == 0:
             await ctx.send('```Skipped.```')
-        #await Play.start(self, ctx)
+
+        if len(queue.queue[ctx.guild.id]) > 0:
+            play = self.bot.get_cog('Play')
+            await play.start(self, ctx)
