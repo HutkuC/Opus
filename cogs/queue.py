@@ -6,6 +6,9 @@ class Queue(commands.Cog):
         self.bot = bot
         self.queue = {}
 
+    def get_from_queue(self, guild_id, index):
+        return self.queue[guild_id][index]
+
     def add_to_queue(self, guild_id, duration, title, url, search_term):
         if self.queue[guild_id] is None:
             self.queue[guild_id] = []
