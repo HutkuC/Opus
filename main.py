@@ -1,4 +1,3 @@
-import os
 import discord
 import asyncio
 from discord.ext import commands
@@ -25,7 +24,7 @@ asyncio.run(add_cogs())
 @bot.event
 async def on_ready():
     print('Bot is ready.')
-    play = bot.get_cog('Play')
-    await play.check_skip.start()
+    Play = bot.get_cog('Play')
+    await Play.check_skip.start()
 
 bot.run(TOKEN)
