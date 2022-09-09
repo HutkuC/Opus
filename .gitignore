@@ -1,3 +1,5 @@
 .idea/*
 /cogs/__pycache__/*
 /sound_files/*
+.DS_Store
+```
