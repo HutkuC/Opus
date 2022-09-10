@@ -1,13 +1,15 @@
 import discord
 import asyncio
+import os
 from discord.ext import commands
 from cogs import channel_controller, music_controller, play, queue
+from dotenv import load_dotenv
 
-TOKEN = '[Discord Bot Token]'
+load_dotenv()
+
+TOKEN = os.getenv('TOKEN')
 
 intents = discord.Intents.all()
-
-client = discord.Client(intents=intents)
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
