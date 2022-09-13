@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 
 
 class Channel_controller(commands.Cog):
@@ -9,10 +10,10 @@ class Channel_controller(commands.Cog):
     @commands.command(name='join', help='Joins the voice channel')
     async def join(self, ctx):
         if ctx.author.voice is None:
-            await ctx.send("```You are not in a voice channel.```")
+            await ctx.send(embed=discord.Embed(title='You are not in a voice channel.', color=0x800800))
             return
         if ctx.voice_client is not None:
-            await ctx.send('```Already in a voice channel.```')
+            await ctx.send(embed=discord.Embed(title='Already in a voice channel.', color=0x800800))
             return
         queue = self.bot.get_cog('Queue')
         queue.construct_queue(ctx.guild.id)
@@ -22,12 +23,12 @@ class Channel_controller(commands.Cog):
     @commands.command(name='leave', help='Leaves the voice channel')
     async def leave(self, ctx):
         if ctx.author.voice is None:
-            await ctx.send("```You are not in a voice channel.```")
+            await ctx.send(embed=discord.Embed(title='You are not in a voice channel.', color=0x800800))
             return
         if ctx.voice_client is None:
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send('```You must be in the same voice channel as the bot.```')
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
             return
 
         if ctx.voice_client.is_playing():
