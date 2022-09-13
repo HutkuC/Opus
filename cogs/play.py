@@ -4,6 +4,7 @@ from pytube import YouTube
 from discord.ext import tasks
 import discord
 import os
+from cogs.song import Song
 
 
 class Play(commands.Cog):
@@ -35,39 +36,51 @@ class Play(commands.Cog):
         video = yt.streams.filter(only_audio=True).first()
         destination = '/Users/utku/Desktop/Opus/sound_files'
         video.download(output_path=destination, filename=str(ctx.guild.id)+'.mp3')
-
         print(yt.title + " has been successfully downloaded.")
+
         ctx.voice_client.play(discord.FFmpegPCMAudio("sound_files/" + str(ctx.guild.id) + ".mp3"),
                               after=lambda e: self.auto_skip(ctx))
-        await ctx.send(f'```Current song: {queue.get_duration(ctx, 0)} - {queue.get_title(ctx, 0)}```')
+
+        await self.bot.get_cog('Queue').now_playing(ctx)
 
     @commands.command(name='play', help='Plays a song')
     async def play(self, ctx, *args):
         if ctx.message.author.voice is None:
-            await ctx.send("```You are not in a voice channel.```")
+            await ctx.send(embed=discord.Embed(title='You are not in a voice channel.', color=0x800800))
             return
         if ctx.voice_client is None:
             channel_controller = self.bot.get_cog('Channel_controller')
             await channel_controller.join(ctx)
         elif ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send('```You must be in the same voice channel as the bot.```')
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
             return
 
-        search_text = ''
+        search_term = ''
         for word in args:
-            search_text += word + ' '
+            search_term += word + ' '
 
-        videosSearch = VideosSearch(search_text, limit=1)
+        videosSearch = VideosSearch(search_term, limit=1)
 
+        video_title = videosSearch.result()['result'][0]['title'].replace(' - Topic', '')
         url = videosSearch.result()['result'][0]['link']
         duration = videosSearch.result()['result'][0]['duration']
-        video_title = videosSearch.result()['result'][0]['title']
-        video_title = video_title.replace(' - Topic', '')
+        thumbnail = videosSearch.result()['result'][0]['thumbnails'][0]['url']
+        requester = ctx.message.author.name
 
         queue = self.bot.get_cog('Queue')
-        queue.add_to_queue(ctx.guild.id, duration, video_title, url, search_text)
+        queue.add_to_queue(ctx, Song(video_title, url, duration, requester, search_term, thumbnail))
 
-        await ctx.send(f'```Added to queue:\n{video_title}```')
+        if len(queue.queue[ctx.guild.id]) != 1:
+            queue_len = len(queue.queue[ctx.guild.id])
+            embed = discord.Embed(title=queue.get_title(ctx, queue_len-1),
+                                  url=queue.get_url(ctx, queue_len-1),
+                                  color=0x800800)
+            embed.set_author(name='Added to queue')
+            embed.set_thumbnail(url=queue.get_thumbnail(ctx, queue_len-1))
+            embed.add_field(name='__Duration__', value=queue.get_duration(ctx, queue_len-1), inline=True)
+            embed.add_field(name='__Requested by__', value=queue.get_requester(ctx, queue_len-1), inline=True)
+            await ctx.send(embed=embed)
+
         if ctx.voice_client.is_playing() is False and \
                 ctx.voice_client.is_paused() is False and \
                 len(queue.queue[ctx.guild.id]) == 1:
