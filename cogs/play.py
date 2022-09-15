@@ -32,6 +32,8 @@ class Play(commands.Cog):
         if len(queue.queue[ctx.guild.id]) == 0:
             return
 
+        message = await ctx.send(embed=discord.Embed(title=':hourglass: Loading...', color=0x800800))
+
         yt = YouTube(queue.get_url(ctx, 0))
         video = yt.streams.filter(only_audio=True).first()
         destination = '/Users/utku/Desktop/Opus/sound_files'
@@ -41,7 +43,15 @@ class Play(commands.Cog):
         ctx.voice_client.play(discord.FFmpegPCMAudio("sound_files/" + str(ctx.guild.id) + ".mp3"),
                               after=lambda e: self.auto_skip(ctx))
 
-        await self.bot.get_cog('Queue').now_playing(ctx)
+        embed = discord.Embed(title=queue.get_title(ctx, 0),
+                              url=queue.get_url(ctx, 0),
+                              color=0x800800)
+        embed.set_author(name='Now playing')
+        embed.set_thumbnail(url=queue.get_thumbnail(ctx, 0))
+        embed.add_field(name='__Duration__', value=queue.get_duration(ctx, 0), inline=True)
+        embed.add_field(name='__Requested by__', value=queue.get_requester(ctx, 0), inline=True)
+
+        await message.edit(embed=embed)
 
     @commands.command(name='play', help='Plays a song')
     async def play(self, ctx, *args):
