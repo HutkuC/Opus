@@ -1,1 +1,2 @@
 # Opus
+Discord music bot.
