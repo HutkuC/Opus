@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 
 
 class Music_controller(commands.Cog):
@@ -9,47 +10,48 @@ class Music_controller(commands.Cog):
     @commands.command(name='pause', help='Pauses the current song')
     async def pause(self, ctx):
         if ctx.author.voice is None:
-            await ctx.send("```You are not in a voice channel.```")
+            await ctx.send(embed=discord.Embed(title='You are not in a voice channel.', color=0x800800))
             return
         if ctx.voice_client is None:
-            await ctx.send('```Not playing anything.```')
+            await ctx.send(embed=discord.Embed(title='Not playing anything.', color=0x800800))
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send('```You must be in the same voice channel as the bot.```')
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
             return
         if ctx.voice_client.is_playing():
             ctx.voice_client.pause()
-            await ctx.send('```Paused.```')
+            await ctx.send(embed=discord.Embed(title=':pause_button: Paused', color=0x800800))
+            return
         else:
-            await ctx.send('```Already paused.```')
+            return
 
     @commands.command(name='resume', help='Resumes the current song')
     async def resume(self, ctx):
         if ctx.author.voice is None:
-            await ctx.send("```You are not in a voice channel.```")
+            await ctx.send(embed=discord.Embed(title='You are not in a voice channel.', color=0x800800))
             return
         if ctx.voice_client is None:
-            await ctx.send('```Not playing anything.```')
+            await ctx.send(embed=discord.Embed(title='Not playing anything.', color=0x800800))
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send('```You must be in the same voice channel as the bot.```')
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
             return
         if ctx.voice_client.is_paused():
             ctx.voice_client.resume()
-            await ctx.send('```Resumed.```')
+            await ctx.send(embed=discord.Embed(title=':arrow_forward: Resumed', color=0x800800))
         else:
-            await ctx.send('```Not paused.```')
+            return
 
     @commands.command(name='skip', help='Skips the current song')
     async def skip(self, ctx, *args):
         if ctx.author.voice is None:
-            await ctx.send("```You are not in a voice channel.```")
+            await ctx.send(embed=discord.Embed(title='You are not in a voice channel.', color=0x800800))
             return
         if ctx.voice_client is None:
-            await ctx.send('```Not playing anything.```')
+            await ctx.send(embed=discord.Embed(title='Not playing anything.', color=0x800800))
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send('```You must be in the same voice channel as the bot.```')
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
             return
 
         queue = self.bot.get_cog('Queue')
@@ -57,7 +59,7 @@ class Music_controller(commands.Cog):
         if ctx.voice_client.is_playing():
             ctx.voice_client.stop()
         if len(args) == 0:
-            await ctx.send('```Skipped.```')
+            await ctx.send(embed=discord.Embed(title=':next_track: Skipped', color=0x800800))
         if len(queue.queue[ctx.guild.id]) > 0:
             queue.queue[ctx.guild.id].pop(0)
         if len(queue.queue[ctx.guild.id]) > 0:
