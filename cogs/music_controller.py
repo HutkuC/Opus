@@ -16,7 +16,8 @@ class Music_controller(commands.Cog):
             await ctx.send(embed=discord.Embed(title='Not playing anything.', color=0x800800))
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.',
+                                               color=0x800800))
             return
         if ctx.voice_client.is_playing():
             ctx.voice_client.pause()
@@ -34,7 +35,8 @@ class Music_controller(commands.Cog):
             await ctx.send(embed=discord.Embed(title='Not playing anything.', color=0x800800))
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.',
+                                               color=0x800800))
             return
         if ctx.voice_client.is_paused():
             ctx.voice_client.resume()
@@ -51,7 +53,8 @@ class Music_controller(commands.Cog):
             await ctx.send(embed=discord.Embed(title='Not playing anything.', color=0x800800))
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.',
+                                               color=0x800800))
             return
 
         queue = self.bot.get_cog('Queue')
