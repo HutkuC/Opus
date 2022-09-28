@@ -21,7 +21,8 @@ class Play(commands.Cog):
         if len(self.skip_set) > 0:
             music_controller = self.bot.get_cog('Music_controller')
             for ctx in self.skip_set:
-                await music_controller.skip(ctx, 'auto_skip')
+                if ctx.voice_client is not None:
+                    await music_controller.skip(ctx, 'auto_skip')
             self.skip_set.clear()
 
     async def start(self, ctx):
@@ -62,7 +63,8 @@ class Play(commands.Cog):
             channel_controller = self.bot.get_cog('Channel_controller')
             await channel_controller.join(ctx)
         elif ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.',
+                                               color=0x800800))
             return
 
         search_term = ''
