@@ -57,7 +57,7 @@ class Music_controller(commands.Cog):
         queue = self.bot.get_cog('Queue')
 
         if ctx.voice_client.is_playing():
-            ctx.voice_client.stop()
+            ctx.voice_client.pause()
         if len(args) == 0:
             await ctx.send(embed=discord.Embed(title=':next_track: Skipped', color=0x800800))
         if len(queue.queue[ctx.guild.id]) > 0:
