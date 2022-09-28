@@ -28,7 +28,8 @@ class Channel_controller(commands.Cog):
         if ctx.voice_client is None:
             return
         if ctx.voice_client.channel != ctx.message.author.voice.channel:
-            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.', color=0x800800))
+            await ctx.send(embed=discord.Embed(title='You must be in the same voice channel as the bot.',
+                                               color=0x800800))
             return
 
         if ctx.voice_client.is_playing():
