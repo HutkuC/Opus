@@ -25,6 +25,7 @@ class Play(commands.Cog):
                     await music_controller.skip(ctx, 'auto_skip')
             self.skip_set.clear()
 
+
     async def start(self, ctx):
         queue = self.bot.get_cog('Queue')
         if os.path.exists("./sound_files/" + str(ctx.guild.id) + ".mp3"):
