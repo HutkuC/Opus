@@ -57,6 +57,9 @@ class Lyrics(commands.Cog):
         else:
             lyrics, song_name, artist_name, img, song_link = self.get_lyrics(' '.join(args))
 
+        if len(lyrics) > 1536:
+            lyrics = lyrics[:1536] + '...' + '\n [Read more](' + song_link + ')'
+
         embed = discord.Embed(title=artist_name + ' - ' + song_name, description=lyrics, url=song_link, color=0x800800)
         embed.set_author(name='Lyrics')
         embed.set_thumbnail(url='https://' + img[2:])
