@@ -52,10 +52,18 @@ class Lyrics(commands.Cog):
                 await ctx.send(embed=discord.Embed(title='No song is playing.', color=0x800800))
                 return
             else:
-                lyrics, song_name, artist_name, img, song_link = self.get_lyrics(term)
+                try:
+                    lyrics, song_name, artist_name, img, song_link = self.get_lyrics(term)
+                except IndexError:
+                    await ctx.send(embed=discord.Embed(title='No lyrics found.', color=0x800800))
+                    return
 
         else:
-            lyrics, song_name, artist_name, img, song_link = self.get_lyrics(' '.join(args))
+            try:
+                lyrics, song_name, artist_name, img, song_link = self.get_lyrics(' '.join(args))
+            except IndexError:
+                await ctx.send(embed=discord.Embed(title='No lyrics found.', color=0x800800))
+                return
 
         if len(lyrics) > 3000:
             lyrics = lyrics[:3000] + '...' + '\n [Read more](' + song_link + ')'
