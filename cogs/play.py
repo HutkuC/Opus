@@ -37,9 +37,9 @@ class Play(commands.Cog):
 
         yt = YouTube(queue.get_url(ctx, 0))
         video = yt.streams.filter(only_audio=True).first()
-        destination = '/Users/utku/Desktop/Opus/sound_files'
+        destination = 'sound_files'
         video.download(output_path=destination, filename=str(ctx.guild.id)+'.mp3')
-        print(yt.title + " has been successfully downloaded.")
+        print(yt.title + " has been successfully downloaded as " + str(ctx.guild.id) + ".mp3")
 
         ctx.voice_client.play(discord.FFmpegPCMAudio("sound_files/" + str(ctx.guild.id) + ".mp3"),
                               after=lambda e: self.auto_skip(ctx))
