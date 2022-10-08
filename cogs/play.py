@@ -5,6 +5,7 @@ from discord.ext import tasks
 import discord
 import os
 from cogs.song import Song
+from cogs.download import Download
 
 
 class Play(commands.Cog):
@@ -35,11 +36,8 @@ class Play(commands.Cog):
 
         message = await ctx.send(embed=discord.Embed(title=':hourglass: Loading...', color=0x800800))
 
-        yt = YouTube(queue.get_url(ctx, 0))
-        video = yt.streams.filter(only_audio=True).first()
-        destination = 'sound_files'
-        video.download(output_path=destination, filename=str(ctx.guild.id)+'.mp3')
-        print(yt.title + " has been successfully downloaded as " + str(ctx.guild.id) + ".mp3")
+        url = queue.get_url(ctx, 0)
+        Download.download(ctx, url)
 
         ctx.voice_client.play(discord.FFmpegPCMAudio("sound_files/" + str(ctx.guild.id) + ".mp3"),
                               after=lambda e: self.auto_skip(ctx))
