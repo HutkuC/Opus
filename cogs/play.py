@@ -1,6 +1,5 @@
 from discord.ext import commands
 from youtubesearchpython import VideosSearch
-from pytube import YouTube
 from discord.ext import tasks
 import discord
 import os
