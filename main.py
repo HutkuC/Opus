@@ -2,7 +2,7 @@ import discord
 import asyncio
 import os
 from discord.ext import commands
-from cogs import channel_controller, music_controller, play, queue, lyrics
+from cogs import channel_controller, music_controller, play, queue, lyrics, radio
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +13,12 @@ intents = discord.Intents.all()
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-COGS = [channel_controller.Channel_controller, music_controller.Music_controller, play.Play, queue.Queue, lyrics.Lyrics]
+COGS = [channel_controller.Channel_controller,
+        music_controller.Music_controller,
+        play.Play,
+        queue.Queue,
+        lyrics.Lyrics,
+        radio.Radio]
 
 
 async def add_cogs():

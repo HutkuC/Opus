@@ -58,13 +58,22 @@ class Music_controller(commands.Cog):
             return
 
         queue = self.bot.get_cog('Queue')
+        radio = self.bot.get_cog('Radio')
+        play = self.bot.get_cog('Play')
 
         if ctx.voice_client.is_playing():
             ctx.voice_client.pause()
         if len(args) == 0:
             await ctx.send(embed=discord.Embed(title=':next_track: Skipped', color=0x800800))
-        if len(queue.queue[ctx.guild.id]) > 0:
+
+        if len(queue.queue[ctx.guild.id]) == 1 and radio.get_radio_status(ctx) is True:
+            prev_song_url = queue.get_url(ctx, 0)
+            next_song_id = radio.get_next_song(prev_song_url)
             queue.queue[ctx.guild.id].pop(0)
-        if len(queue.queue[ctx.guild.id]) > 0:
-            play = self.bot.get_cog('Play')
+            await play.play(ctx, next_song_id)
+
+        elif len(queue.queue[ctx.guild.id]) > 0:
+            queue.queue[ctx.guild.id].pop(0)
+
+        if len(queue.queue[ctx.guild.id]) > 0 and ctx.voice_client.is_playing() is False:
             await play.start(ctx)

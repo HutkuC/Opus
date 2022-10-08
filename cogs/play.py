@@ -66,7 +66,7 @@ class Play(commands.Cog):
 
         search_term = ''
         for word in args:
-            search_term += word + ' '
+            search_term += str(word) + ' '
 
         videosSearch = VideosSearch(search_term, limit=1)
 
@@ -91,6 +91,5 @@ class Play(commands.Cog):
             await ctx.send(embed=embed)
 
         if ctx.voice_client.is_playing() is False and \
-                ctx.voice_client.is_paused() is False and \
                 len(queue.queue[ctx.guild.id]) == 1:
             await self.start(ctx)
