@@ -10,7 +10,7 @@ class Lyrics(commands.Cog):
         self.bot = bot
 
     @staticmethod
-    def get_lyrics(term):
+    def get_lyrics_from_musixmatch(term):
         HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
         url = "https://www.musixmatch.com/search/" + '%20'.join(term.split()) + "/tracks"
@@ -31,8 +31,21 @@ class Lyrics(commands.Cog):
 
         return lyrics, song_name, artist_name, thumbnail, song_link
 
+    @staticmethod
+    def get_lyrics_from_google(term):
+        HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+
+        term += " lyrics"
+        page = requests.get("https://www.google.com/search?q=" + '+'.join(term.split(' ')), headers=HEADERS)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        lyric_source = soup.find_all('div', class_='BNeawe tAd8D AP7Wnd')
+        lyrics = lyric_source[-2].text
+
+        return lyrics
+
     @commands.command(name='lyrics', help='Shows the lyrics of the song')
     async def lyrics(self, ctx, *args):
+        musixmatch = True
         if len(args) == 0:
             if ctx.author.voice is None:
                 await ctx.send(embed=discord.Embed(title='You are not in a voice channel.', color=0x800800))
@@ -53,26 +66,33 @@ class Lyrics(commands.Cog):
                 return
             else:
                 try:
-                    lyrics, song_name, artist_name, img, song_link = self.get_lyrics(term)
+                    lyrics, song_name, artist_name, img, song_link = self.get_lyrics_from_musixmatch(term)
+                    if lyrics == '':
+                        lyrics = self.get_lyrics_from_google(term)
+                        song_link = 'https://www.google.com/search?q=' + '+'.join(term.split(' ')) + '+lyrics'
+                        musixmatch = False
                 except IndexError:
                     await ctx.send(embed=discord.Embed(title='No lyrics found.', color=0x800800))
                     return
 
         else:
             try:
-                lyrics, song_name, artist_name, img, song_link = self.get_lyrics(' '.join(args))
+                lyrics, song_name, artist_name, img, song_link = self.get_lyrics_from_musixmatch(' '.join(args))
+                if lyrics == '':
+                    lyrics = self.get_lyrics_from_google(' '.join(args))
+                    song_link = 'https://www.google.com/search?q=' + '+'.join(' '.join(args).split(' ')) + '+lyrics'
+                    musixmatch = False
             except IndexError:
                 await ctx.send(embed=discord.Embed(title='No lyrics found.', color=0x800800))
                 return
 
         if len(lyrics) > 3000:
             lyrics = lyrics[:3000] + '...' + '\n [Read more](' + song_link + ')'
-        if lyrics == '':
-            lyrics = 'Restricted Lyrics'
 
         embed = discord.Embed(title=artist_name + ' - ' + song_name, description=lyrics, url=song_link, color=0x800800)
         embed.set_author(name='Lyrics')
         embed.set_thumbnail(url='https://' + img[2:])
-        embed.set_footer(text='Powered by Musixmatch')
+        if musixmatch is True:
+            embed.set_footer(text='Powered by Musixmatch')
 
         await ctx.send(embed=embed)
