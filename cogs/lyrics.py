@@ -93,6 +93,6 @@ class Lyrics(commands.Cog):
         embed.set_author(name='Lyrics')
         embed.set_thumbnail(url='https://' + img[2:])
         if musixmatch is True:
-            embed.set_footer(text='Powered by Musixmatch')
+            embed.set_footer(text='Lyrics from Musixmatch')
 
         await ctx.send(embed=embed)
